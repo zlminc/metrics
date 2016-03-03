@@ -294,7 +294,7 @@ public class GraphiteReporter extends ScheduledReporter {
 
         if (value instanceof Map) {
             for (Object k : ((Map) value).keySet()) {
-                nameToReport = k.toString();
+                nameToReport = formatMetricNameForGraphite(k.toString());
                 valueToReport = format(((Map) value).get(k));
                 graphite.send(prefix(name)+"."+nameToReport, valueToReport, timestamp);
             }
@@ -326,6 +326,10 @@ public class GraphiteReporter extends ScheduledReporter {
 
     private String prefix(MetricName name, String... components) {
         return MetricName.join(MetricName.join(prefix, name), MetricName.build(components)).getKey();
+    }
+
+    private String formatMetricNameForGraphite(String string) {
+        return string.replace('.', '_');
     }
 
 }
